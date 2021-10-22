@@ -29,6 +29,5 @@ RUN apt-get update -y && \
     ./autogen.sh && \
     make -j $CORES && \
     make install  && \
-    cd /app &&  \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/*
