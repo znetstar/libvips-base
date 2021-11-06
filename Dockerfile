@@ -1,10 +1,8 @@
 FROM ubuntu:20.04
 
 ARG CORES=1
-
-ARG VIPSHOME=/usr/local/vips
-
-ENV PKG_CONFIG_PATH $VIPSHOME/lib/pkgconfig
+ARG VIPSBRANCH=master
+ENV VIPSHOME /opt/vips
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && \
@@ -27,11 +25,12 @@ RUN apt-get update -y && \
       libheif-dev \
       libtiff-dev \
       gtk-doc-tools && \
-    git clone git://github.com/jcupitt/libvips.git /usr/local/src/vips && \
+    git clone -b $VIPSBRANCH --depth 1 git://github.com/jcupitt/libvips.git /usr/local/src/vips && \
     cd /usr/local/src/vips && \
     ./autogen.sh --prefix=$VIPSHOME && \
     make -j $CORES && \
     make install  && \
     ldconfig && \
     apt-get clean -y && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    cp -r /opt/vips /usr/local
